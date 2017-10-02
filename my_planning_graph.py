@@ -421,7 +421,7 @@ class PlanningGraph():
 
     def interference_mutex(self, node_a1: PgNode_a, node_a2: PgNode_a) -> bool:
         """
-        Test a pair of actions for mutual exclusion, returning True if the 
+        Test a pair of actions for mutual exclusion, returning True if the
         effect of one action is the negation of a precondition of the other.
 
         HINT: The Action instance associated with an action node is accessible
@@ -433,8 +433,9 @@ class PlanningGraph():
         :param node_a2: PgNode_a
         :return: bool
         """
-        # test for Interference between nodes
 
+      # test for Interference between nodes
+        """
         for e in node_a1.action.effect_add:
             if e in node_a2.action.precond_neg:
                 return True
@@ -447,8 +448,15 @@ class PlanningGraph():
         for e in node_a2.action.effect_rem:
             if e in node_a1.action.precond_pos:
                 return True
-
         return False
+        """
+        # quicker way to perform checks
+
+        return (len(list(set(node_a1.action.effect_add) & set(node_a2.action.precond_neg))) > 0
+                or len(list(set(node_a2.action.effect_add) & set(node_a1.action.precond_neg))) > 0
+                or len(list(set(node_a1.action.effect_rem) & set(node_a2.action.precond_pos))) > 0
+                or len(list(set(node_a2.action.effect_rem) & set(node_a1.action.precond_pos))) > 0
+                )
 
     def competing_needs_mutex(self, node_a1: PgNode_a, node_a2: PgNode_a) -> bool:
         """
@@ -456,9 +464,9 @@ class PlanningGraph():
         the precondition of one action is mutex with a precondition of the
         other action.
 
-        :param node_a1: PgNode_a
-        :param node_a2: PgNode_a
-        :return: bool
+        : param node_a1: PgNode_a
+        : param node_a2: PgNode_a
+        : return: bool
         """
 
         # test for Competing Needs between nodes
@@ -471,7 +479,7 @@ class PlanningGraph():
         return False
 
     def update_s_mutex(self, nodeset: set):
-        """ Determine and update sibling mutual exclusion for S-level nodes
+        """ Determine and update sibling mutual exclusion for S - level nodes
 
         Mutex action tests section from 3rd Ed. 10.3 or 2nd Ed. 11.4
         A mutex relation holds between literals at a given level
@@ -479,8 +487,8 @@ class PlanningGraph():
            Negation
            Inconsistent support
 
-        :param nodeset: set of PgNode_a (siblings in the same level)
-        :return:
+        : param nodeset: set of PgNode_a(siblings in the same level)
+        : return:
             mutex set in each PgNode_a in the set is appropriately updated
         """
         nodelist = list(nodeset)
@@ -498,9 +506,9 @@ class PlanningGraph():
         literal expression nodes, and the class tracks whether the literal is
         positive or negative.
 
-        :param node_s1: PgNode_s
-        :param node_s2: PgNode_s
-        :return: bool
+        : param node_s1: PgNode_s
+        : param node_s2: PgNode_s
+        : return: bool
         """
         # test for negation between nodes
         if node_s1.symbol == node_s2.symbol and node_s1.is_pos != node_s2.is_pos:
@@ -520,9 +528,9 @@ class PlanningGraph():
         HINT: The PgNode.is_mutex method can be used to test whether two nodes
         are mutually exclusive.
 
-        :param node_s1: PgNode_s
-        :param node_s2: PgNode_s
-        :return: bool
+        : param node_s1: PgNode_s
+        : param node_s2: PgNode_s
+        : return: bool
         """
         # test for Inconsistent Support between nodes
         for p_s1 in node_s1.parents:
@@ -533,9 +541,9 @@ class PlanningGraph():
         return True
 
     def h_levelsum(self) -> int:
-        """The sum of the level costs of the individual goals (admissible if goals independent)
+        """The sum of the level costs of the individual goals(admissible if goals independent)
 
-        :return: int
+        : return: int
         """
         # implement
         # for each goal in the problem, determine the level cost, then add them
